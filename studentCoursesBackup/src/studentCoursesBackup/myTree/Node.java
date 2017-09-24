@@ -1,3 +1,5 @@
+package studentCoursesBackup;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -52,6 +54,19 @@ public class Node {
 		for(int x=0; x<n.getCourses().size(); x++) {
 			courses.add(n.getCourses().get(x));
 		}
+	}
+
+	/**
+	 * @return String representation of Node
+	 */
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(Integer.toString(bnum));
+		for(int x=0; x<courses.size(); x++) {
+			sb.append(" ");
+			sb.append(courses.get(x));
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -118,7 +133,7 @@ public class Node {
 	 * @return boolean representing success/failure of insert
 	 * adds new course string to courses list if not already there
 	 */
-	public boolean addNewCourse(String s) {
+	public boolean addCourse(String s) {
 		if(!courses.contains(s)) {
 			courses.add(s);
 			return true;

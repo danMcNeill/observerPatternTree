@@ -26,7 +26,7 @@
 		<mkdir dir="${BUILD}/jar"/>
 		<jar destfile="${BUILD}/jar/studentCoursesBackup.jar" basedir="${BUILD}/classes">
 			<manifest>
-				<attribute name="Main-Class" value="studentCoursesBackup.driver.Driver"/>
+				<attribute name="Main-Class" value="studentCoursesBackup.Driver"/>
 			</manifest>
 		</jar>
 	</target>
