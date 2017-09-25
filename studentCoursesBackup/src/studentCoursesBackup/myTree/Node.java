@@ -3,7 +3,7 @@ package studentCoursesBackup;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Node {
+public class Node implements SubjectI, ObserverI {
 
 	private int bnum;
 
@@ -11,6 +11,99 @@ public class Node {
 
 	private Node leftChild;
 	private Node rightChild;
+
+	private List<ObserverI> observers;
+
+	private Node subject;
+
+	/**
+	 * @return boolean true if same object, false otherwise
+	 */
+	public boolean equals(Object o) {
+		if(!(o instanceof Node))
+			return false;
+		if(o == this)
+			return true;
+		if(o == null)
+			return false;
+		Node n = (Node) o;
+
+		if(n.getBNum() == this.getBNum())
+			return true;
+		else
+			return false;
+	}
+		
+
+	/**
+	 * @return nothing
+	 * registers observer by adding it to list of observers
+	 */
+	public void registerObserver(ObserverI o) {
+		observers.add(o);
+	}
+
+	/**
+	 * @return nothing
+	 * removes observer by removing it from list of observers
+	 */
+	public void removeObserver(ObserverI o) {
+		observers.remove(o);
+	}
+
+	/**
+	 * @return nothing
+	 * notifies observers that state has changed
+	 */
+	public void notifyObservers() {
+		for(int i=0; i<observers.size(); i++) {
+			observers.get(i).update(this);
+		}
+	}
+
+	/**
+	 * @return nothing
+	 * updates the observer nodes with new state
+	 */
+	public void update(Object o) {
+		if(!(o instanceof Node))
+			return;
+		Node n = (Node) o;
+		courses.clear();
+		for(int x=0; x<n.getCourses().size(); x++)
+			courses.add(n.getCourses().get(x));
+
+	}
+
+	/**
+	 * @return subject of this node
+	 */
+	public Node getSubject() {
+		return subject;
+	}
+
+	/**
+	 * @return nothing
+	 * sets new subject for this node
+	 */
+	public void setSubject(Node n) {
+		subject = n;
+	}
+
+	/**
+	 * @return observers, list of observers nodes
+	 */
+	public List<ObserverI> getObservers() {
+		return observers;
+	}
+
+	/**
+	 * @return nothing
+	 * sets observers to new list
+	 */
+	public void setObservers(List<ObserverI> obs) {
+		observers = obs;
+	}
 
 	/**
 	 * constructor with no values
@@ -20,6 +113,7 @@ public class Node {
 		courses = new ArrayList<String>();
 		leftChild = null;
 		rightChild = null;
+		observers = new ArrayList<ObserverI>();
 	}
 
 	/**
@@ -31,6 +125,7 @@ public class Node {
 		courses.add(s);
 		leftChild = null;
 		rightChild = null;
+		observers = new ArrayList<ObserverI>();
 	}
 
 	/**
@@ -41,10 +136,11 @@ public class Node {
 		courses = new ArrayList<String>();
 		leftChild = null;
 		rightChild = null;
+		observers = new ArrayList<ObserverI>();
 	}
 
 	/**
-	 * constructor to clone a node
+	 * constructor to clone a node..... NOT RIGHT
 	 */
 	public Node(Node n) {
 		bnum = n.getBNum();
@@ -54,6 +150,8 @@ public class Node {
 		for(int x=0; x<n.getCourses().size(); x++) {
 			courses.add(n.getCourses().get(x));
 		}
+		observers = new ArrayList<ObserverI>();
+		subject = n;
 	}
 
 	/**
@@ -62,6 +160,7 @@ public class Node {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(Integer.toString(bnum));
+		sb.append(":");
 		for(int x=0; x<courses.size(); x++) {
 			sb.append(" ");
 			sb.append(courses.get(x));

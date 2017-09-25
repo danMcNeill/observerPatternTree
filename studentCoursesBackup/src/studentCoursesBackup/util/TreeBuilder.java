@@ -35,7 +35,9 @@ public class TreeBuilder {
 				sb.append(" ");
 			}
 			sb.append(root.toString());
-			sb.append(" ");
+http://www.cs.binghamton.edu/~mgovinda/courses/csx42/assignments/assign2/assign2.html
+
+			sb.append("\n");
 			if(root.getRightChild() != null)
 				sb.append(toStringAux(root.getRightChild()));
 			return sb.toString();
@@ -55,7 +57,7 @@ public class TreeBuilder {
 			sb.append(" ");
 		}
 		sb.append(current.toString());
-		sb.append(" ");
+		sb.append("\n ");
 		if(current.getRightChild() != null) {
 			sb.append(toStringAux(current.getRightChild()));
 			sb.append(" ");
