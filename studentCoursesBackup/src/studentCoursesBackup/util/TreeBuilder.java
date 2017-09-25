@@ -7,12 +7,16 @@ import java.util.ArrayList;
 public class TreeBuilder {
 
 	private Node root;
+	private Node root_clone1;
+	private Node root_clone2;
 
 	/**
 	 * constructor with no root specified
 	 */
 	public TreeBuilder() {
 		root = null;
+		root_clone1 = null;
+		root_clone2 = null;
 	}
 
 	/**
@@ -20,6 +24,8 @@ public class TreeBuilder {
 	 */
 	public TreeBuilder(Node r) {
 		root = r;
+		root_clone1 = new Node(r);
+		root_clone2 = new Node(r);
 	}
 
 	/**
@@ -35,8 +41,6 @@ public class TreeBuilder {
 				sb.append(" ");
 			}
 			sb.append(root.toString());
-http://www.cs.binghamton.edu/~mgovinda/courses/csx42/assignments/assign2/assign2.html
-
 			sb.append("\n");
 			if(root.getRightChild() != null)
 				sb.append(toStringAux(root.getRightChild()));
@@ -83,10 +87,20 @@ http://www.cs.binghamton.edu/~mgovinda/courses/csx42/assignments/assign2/assign2
 		if(find(b) == null) { // if student does not exist in tree
 			if(root == null) {
 				root = new Node(b, c);
+
+				root_clone1 = new Node(b, c);
+				root_clone2 = new Node(b, c);
+
+				root.registerObserver(root_clone1);
+				root.registerObserver(root_clone2);
+
+				root_clone1.setSubject(root);
+				root_clone2.setSubject(root);
+
 				return true;
 			}
 			else
-				return insertAux(root,root, b, c, 0);
+				return insertAux(root,root, b, c, 0, root_clone1, root_clone1, root_clone2, root_clone2);
 		}
 
 		else { // if student already exists in tree
@@ -103,12 +117,30 @@ http://www.cs.binghamton.edu/~mgovinda/courses/csx42/assignments/assign2/assign2
 	 * @param c, String representing course to add to student
 	 * helps insert Node with bnum = b
 	 */
-	public boolean insertAux(Node parent, Node current, int b, String c, int direction) {
+	public boolean insertAux(Node parent, Node current, int b, String c, int direction, Node parent_clone1, Node current_clone1, Node parent_clone2, Node current_clone2) {
 		if(current == null) {
-			if(direction == 0) // left
+			if(direction == 0) {  // left
 				parent.setLeftChild(new Node(b, c));
-			else // right
+				parent_clone1.setLeftChild(new Node(b, c));
+				parent_clone2.setLeftChild(new Node(b, c));
+
+				parent.getLeftChild().registerObserver(parent_clone1.getLeftChild());
+				parent.getLeftChild().registerObserver(parent_clone2.getLeftChild());
+
+				parent_clone1.getLeftChild().setSubject(parent.getLeftChild());
+				parent_clone2.getLeftChild().setSubject(parent.getLeftChild());
+			}
+			else { // right
 				parent.setRightChild(new Node(b, c));
+				parent_clone1.setRightChild(new Node(b, c));
+				parent_clone2.setRightChild(new Node(b, c));
+
+				parent.getRightChild().registerObserver(parent_clone1.getRightChild());
+				parent.getRightChild().registerObserver(parent_clone2.getRightChild());
+				
+				parent_clone1.getRightChild().setSubject(parent.getRightChild());
+				parent_clone2.getRightChild().setSubject(parent.getRightChild());
+			}
 			return true;
 		}
 
@@ -116,9 +148,9 @@ http://www.cs.binghamton.edu/~mgovinda/courses/csx42/assignments/assign2/assign2
 			return false;
 
 		if(b < current.getBNum())
-			return insertAux(current, current.getLeftChild(), b, c, 0);
+			return insertAux(current, current.getLeftChild(), b, c, 0, current_clone1, current_clone1.getLeftChild(), current_clone2, current_clone2.getLeftChild());
 
-		return insertAux(current, current.getRightChild(), b, c, 1);
+		return insertAux(current, current.getRightChild(), b, c, 1, current_clone1, current_clone1.getRightChild(), current_clone2, current_clone2.getRightChild());
 
 	}
 
