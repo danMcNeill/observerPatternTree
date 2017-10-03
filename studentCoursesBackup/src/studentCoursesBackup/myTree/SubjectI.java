@@ -6,6 +6,6 @@ public interface SubjectI {
 
 	public void removeObserver(ObserverI o);
 
-	public void notifyObservers();
+	public void notifyObservers(Object o);
 
 }

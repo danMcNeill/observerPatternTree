@@ -3,7 +3,7 @@ package studentCoursesBackup;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Node implements SubjectI, ObserverI {
+public class Node implements Cloneable, SubjectI, ObserverI {
 
 	private int bnum;
 
@@ -15,6 +15,18 @@ public class Node implements SubjectI, ObserverI {
 	private List<ObserverI> observers;
 
 	private Node subject;
+
+	/**
+	 * @return Node that is a clone of Node parameter
+	 * clones node and returns new copy
+	 */
+	protected Object clone() {
+		Node node = new Node();
+		node.setBNum(getBNum());
+		for(int i=0; i<getCourses().size(); i++)
+			node.addCourse(getCourses().get(i));
+		return node;
+	}
 
 	/**
 	 * @return boolean true if same object, false otherwise
@@ -55,9 +67,11 @@ public class Node implements SubjectI, ObserverI {
 	 * @return nothing
 	 * notifies observers that state has changed
 	 */
-	public void notifyObservers() {
+	public void notifyObservers(Object o) {
+		if(!(o instanceof String))
+			return;
 		for(int i=0; i<observers.size(); i++) {
-			observers.get(i).update(this);
+			observers.get(i).update(o);
 		}
 	}
 
@@ -66,13 +80,14 @@ public class Node implements SubjectI, ObserverI {
 	 * updates the observer nodes with new state
 	 */
 	public void update(Object o) {
-		if(!(o instanceof Node))
+		if(!(o instanceof String))
 			return;
-		Node n = (Node) o;
-		courses.clear();
-		for(int x=0; x<n.getCourses().size(); x++)
-			courses.add(n.getCourses().get(x));
-
+		String course = (String) o;
+		boolean removed = this.removeCourse(course);
+		if(removed)
+			return;
+		else
+			this.addCourse(course);
 	}
 
 	/**
@@ -139,20 +154,6 @@ public class Node implements SubjectI, ObserverI {
 		observers = new ArrayList<ObserverI>();
 	}
 
-	/**
-	 * constructor to clone a node..... NOT RIGHT
-	 */
-	public Node(Node n) {
-		bnum = n.getBNum();
-		courses = new ArrayList<String>();
-		leftChild = n.getLeftChild();
-		rightChild = n.getRightChild();
-		for(int x=0; x<n.getCourses().size(); x++) {
-			courses.add(n.getCourses().get(x));
-		}
-		observers = new ArrayList<ObserverI>();
-		subject = n;
-	}
 
 	/**
 	 * @return String representation of Node
@@ -239,6 +240,14 @@ public class Node implements SubjectI, ObserverI {
 		}
 		else
 			return false;
+	}
+
+	/**
+	 * @return true if removal was successful, false otherwise
+	 * removes specified string from arraylist of courses (strings)
+	 */
+	public boolean removeCourse(String s) {
+		return courses.remove(s);
 	}
 
 }

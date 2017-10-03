@@ -1,4 +1,4 @@
-<project name="studentCoursesBackup" default="compile_all" basedir="..">
+<project name="studentCoursesBackup" default="all" basedir="..">
 	
 	<property name="BUILD.compiler" value="modern"/>
 	<property name="src" value="src/"/>
