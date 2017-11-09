@@ -20,9 +20,9 @@ public class Driver {
 
 		TreeBuilder tree = new TreeBuilder();
 
-		tree.insertInputs("input1.txt");
+		tree.insertInputs(args[0]);
 
-		tree.deleteInputs("delete1.txt");
+		tree.deleteInputs(args[1]);
 
 		Results orig = new Results();
 
